@@ -16,7 +16,6 @@
 	<properties>
 		<java.version>17</java.version>
 		<maven.checkstyle.plugin.configLocation>checkstyle.xml</maven.checkstyle.plugin.configLocation>
-
 	</properties>
 	<dependencies>
 		<dependency>
@@ -87,7 +86,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<configLocation>../springBootProject/checkstyle.xml</configLocation>
+					<configLocation>${maven.checkstyle.plugin.configLocation}</configLocation>
 					<encoding>UTF-8</encoding>
 					<consoleOutput>true</consoleOutput>
 					<failsOnError>true</failsOnError>
