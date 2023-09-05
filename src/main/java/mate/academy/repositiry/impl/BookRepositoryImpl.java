@@ -3,18 +3,17 @@ package mate.academy.repositiry.impl;
 import java.util.List;
 import mate.academy.model.Book;
 import mate.academy.repositiry.BookRepository;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class BookRepositoryImpl implements BookRepository {
     private final SessionFactory sessionFactory;
 
-    @Autowired
     public BookRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -33,7 +32,7 @@ public class BookRepositoryImpl implements BookRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException("Can`t insert book into DB: " + book);
+            throw new HibernateException("Can`t insert book into DB: " + book);
         } finally {
             if (session != null) {
                 session.close();
