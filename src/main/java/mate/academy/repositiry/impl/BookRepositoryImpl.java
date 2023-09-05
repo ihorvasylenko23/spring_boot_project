@@ -1,5 +1,6 @@
 package mate.academy.repositiry.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import mate.academy.model.Book;
 import mate.academy.repositiry.BookRepository;
@@ -45,6 +46,8 @@ public class BookRepositoryImpl implements BookRepository {
         try (Session session = sessionFactory.openSession()) {
             Query<Book> getAllBooksQuery = session.createQuery("from Book", Book.class);
             return getAllBooksQuery.getResultList();
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can`t get all books", e);
         }
     }
 }
