@@ -29,6 +29,7 @@ public class Book {
     @Column(nullable = false)
     private BigDecimal price;
 
+    @Column(nullable = false)
     private String description;
 
     @Column(name = "cover_image")
