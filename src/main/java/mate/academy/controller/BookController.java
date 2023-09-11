@@ -1,5 +1,7 @@
 package mate.academy.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import mate.academy.dto.BookDto;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Book management", description = "Endpoints for managing books")
 @RestController
 @RequestMapping(value = "/api/books")
 public class BookController {
@@ -28,32 +31,38 @@ public class BookController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all books", description = "Get list of all available books")
     public List<BookDto> getAll(Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
+    @Operation(summary = "Get book by id", description = "Get book by id")
     @GetMapping("/{id}")
     public BookDto getBookById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
+    @Operation(summary = "Create a new book", description = "Create a new book")
     @PostMapping
     public BookDto createBook(@RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
+    @Operation(summary = "Update a book", description = "Update data about an existing book")
     @PutMapping("/{id}")
     public BookDto updateBook(@PathVariable Long id,
                               @RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.update(id, requestDto);
     }
 
+    @Operation(summary = "Delete book by id", description = "Delete book by id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable Long id) {
         bookService.delete(id);
     }
 
+    @Operation(summary = "Search book", description = "Search book by params")
     @GetMapping("/search")
     public List<BookDto> search(BookSearchParametersDto searchParametersDto) {
         return bookService.search(searchParametersDto);
