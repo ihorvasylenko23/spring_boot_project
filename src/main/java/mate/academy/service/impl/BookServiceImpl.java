@@ -51,10 +51,14 @@ public class BookServiceImpl implements BookService {
         Book existingBook = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find book by id: " + id));
 
-        Book updatedBook = bookMapper.toModel(requestDto);
-        updatedBook.setId(existingBook.getId());
+        existingBook.setTitle(requestDto.getTitle());
+        existingBook.setAuthor(requestDto.getAuthor());
+        existingBook.setIsbn(requestDto.getIsbn());
+        existingBook.setDescription(requestDto.getDescription());
+        existingBook.setPrice(requestDto.getPrice());
+        existingBook.setCoverImage(requestDto.getCoverImage());
 
-        return bookMapper.toDto(bookRepository.save(updatedBook));
+        return bookMapper.toDto(bookRepository.save(existingBook));
     }
 
     @Override

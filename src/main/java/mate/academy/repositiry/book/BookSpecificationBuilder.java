@@ -14,29 +14,25 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
     private SpecificationProviderManager<Book> bookSpecificationProviderManager;
 
     @Override
-    public Specification<Book> build(BookSearchParametersDto searchParametrers) {
+    public Specification<Book> build(BookSearchParametersDto searchParameters) {
         Specification<Book> spec = Specification.where(null);
-        if (searchParametrers.authors() != null && searchParametrers.authors().length > 0) {
-            spec = spec.and(bookSpecificationProviderManager.getSpecificationProvider("author")
-                   .getSpecification(searchParametrers.authors()));
-        }
-        if (searchParametrers.descriptions() != null
-                && searchParametrers.descriptions().length > 0) {
-            spec = spec.and(bookSpecificationProviderManager.getSpecificationProvider("description")
-                    .getSpecification(searchParametrers.descriptions()));
-        }
-        if (searchParametrers.isbns() != null && searchParametrers.isbns().length > 0) {
-            spec = spec.and(bookSpecificationProviderManager.getSpecificationProvider("isbn")
-                    .getSpecification(searchParametrers.isbns()));
-        }
-        if (searchParametrers.prices() != null && searchParametrers.prices().length > 0) {
-            spec = spec.and(bookSpecificationProviderManager.getSpecificationProvider("price")
-                    .getSpecification(searchParametrers.prices()));
-        }
-        if (searchParametrers.titles() != null && searchParametrers.titles().length > 0) {
-            spec = spec.and(bookSpecificationProviderManager.getSpecificationProvider("title")
-                    .getSpecification(searchParametrers.titles()));
-        }
+
+        addSpecificationIfPresent(searchParameters.authors(), "author", spec);
+        addSpecificationIfPresent(searchParameters.descriptions(), "description", spec);
+        addSpecificationIfPresent(searchParameters.isbns(), "isbn", spec);
+        addSpecificationIfPresent(searchParameters.prices(), "price", spec);
+        addSpecificationIfPresent(searchParameters.titles(), "title", spec);
+
         return spec;
+    }
+
+    private void addSpecificationIfPresent(String[] values,
+                                           String providerName,
+                                           Specification<Book> spec) {
+        if (values != null && values.length > 0) {
+            spec = spec.and(bookSpecificationProviderManager
+                    .getSpecificationProvider(providerName)
+                    .getSpecification(values));
+        }
     }
 }
