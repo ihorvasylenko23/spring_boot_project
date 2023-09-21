@@ -1,6 +1,7 @@
 package mate.academy.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Category management", description = "Endpoints for managing categories")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/categories")
@@ -37,7 +39,7 @@ public class CategoryController {
         return categoryService.getByID(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN_ROLE')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create a new category", description = "Create a new category")
     @PostMapping
     public CategoryResponseDto createCategory(
