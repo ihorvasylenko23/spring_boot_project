@@ -69,7 +69,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         saveCartAndItem(cart, existingCartItem);
 
-        return shoppingCartMapper.toDto(cart);
+        List<CartItemDto> cartItemDtos = cart.getCartItems().stream()
+                .map(this::mapCartItemToDtoWithBookDetails)
+                .collect(Collectors.toList());
+        ShoppingCartDto shoppingCartDto = shoppingCartMapper.toDto(cart);
+        shoppingCartDto.setCartItems(cartItemDtos);
+
+        return shoppingCartDto;
     }
 
     private void saveCartAndItem(ShoppingCart cart, CartItem existingCartItem) {
@@ -117,11 +123,23 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
 
-        return shoppingCartMapper.toDto(cartItem.getShoppingCart());
+        ShoppingCart reloadedCart = shoppingCartRepository
+                .findById(cartItem.getShoppingCart().getId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Cart not found for cart item: " + cartItemId));
+
+        return shoppingCartMapper.toDto(reloadedCart);
     }
 
     @Override
     public void deleteCartItem(Long cartItemId) {
-        cartItemRepository.deleteById(cartItemId);
+        Optional<CartItem> optionalCartItem = cartItemRepository.findById(cartItemId);
+        if (optionalCartItem.isPresent()) {
+            CartItem cartItem = optionalCartItem.get();
+            cartItem.setDeleted(true);
+            cartItemRepository.save(cartItem);
+        } else {
+            throw new EntityNotFoundException("CartItem with ID " + cartItemId + " not found.");
+        }
     }
 }

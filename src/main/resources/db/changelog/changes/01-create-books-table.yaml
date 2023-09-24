@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: create-books-table
-      author: root
+      author: Ihor
       changes:
         - createTable:
             tableName: books
@@ -31,7 +31,7 @@ databaseChangeLog:
                     unique: true
               - column:
                   name: price
-                  type: decimal
+                  type: decimal(10,2)
                   constraints:
                     nullable: false
               - column:

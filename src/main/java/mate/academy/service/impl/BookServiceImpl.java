@@ -1,5 +1,6 @@
 package mate.academy.service.impl;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
 import mate.academy.dto.book.BookDto;
 import mate.academy.dto.book.BookSearchParametersDto;
@@ -34,6 +35,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public List<BookDto> findAll(Pageable pageable) {
         return bookRepository.findAll(pageable).stream()
                 .map(bookMapper::toDto)
@@ -43,7 +45,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto findById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can`t find employee by id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Can`t find book by id: " + id));
         return bookMapper.toDto(book);
     }
 
