@@ -22,13 +22,13 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-  public UserLoginResponseDto login(@RequestBody UserLoginRequestDto requestDto) {
+    public UserLoginResponseDto login(@Valid @RequestBody UserLoginRequestDto requestDto) {
         return authenticationService.authenticate(requestDto);
     }
 
     @PostMapping("/register")
-  public UserResponseDto register(@RequestBody @Valid UserRegistrationRequestDto request)
-          throws RegistrationException {
+    public UserResponseDto register(@RequestBody @Valid UserRegistrationRequestDto request)
+            throws RegistrationException {
         return userService.register(request);
     }
 }
