@@ -1,6 +1,6 @@
 package mate.academy.repositiry.book;
 
-import mate.academy.dto.BookSearchParametersDto;
+import mate.academy.dto.book.BookSearchParametersDto;
 import mate.academy.model.Book;
 import mate.academy.repositiry.SpecificationBuilder;
 import mate.academy.repositiry.SpecificationProviderManager;
