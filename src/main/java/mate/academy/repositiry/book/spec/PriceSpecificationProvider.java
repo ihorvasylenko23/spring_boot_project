@@ -1,5 +1,6 @@
 package mate.academy.repositiry.book.spec;
 
+import java.math.BigDecimal;
 import mate.academy.model.Book;
 import mate.academy.repositiry.SpecificationProvider;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,7 +13,7 @@ public class PriceSpecificationProvider implements SpecificationProvider<Book> {
         return "price";
     }
 
-    public Specification<Book> getSpecification(Double minPrice, Double maxPrice) {
+    public Specification<Book> getSpecification(BigDecimal minPrice, BigDecimal maxPrice) {
         return (root, query, criteriaBuilder) -> {
             if (minPrice == null && maxPrice == null) {
                 return criteriaBuilder.conjunction();
