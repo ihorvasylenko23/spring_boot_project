@@ -1,6 +1,5 @@
 package mate.academy.dto.book;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -10,23 +9,18 @@ import lombok.Data;
 @Data
 public class CreateBookRequestDto {
     @Size(min = 1, max = 255)
-    @NotBlank
+    @NotNull
     private String title;
-
-    @NotBlank
+    @NotNull
     @Size(min = 1, max = 255)
     private String author;
-
-    @NotBlank
+    @NotNull
     private String isbn;
-
     @NotNull
     @Positive
     private BigDecimal price;
-
-    @NotBlank
+    @NotNull
     private String description;
-
-    @NotBlank
+    @NotNull
     private String coverImage;
 }
