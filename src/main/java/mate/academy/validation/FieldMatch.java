@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Documented
 @Constraint(validatedBy = FieldMatchValidator.class)
 public @interface FieldMatch {
-    String message() default "Passwords do not match";
+    String message() default "{first} and {second} do not match";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

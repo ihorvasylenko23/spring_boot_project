@@ -27,14 +27,11 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto register(UserRegistrationRequestDto request)
             throws RegistrationException {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RegistrationException("Unable to complete registration");
+            throw new RegistrationException("Unable to complete registration: email "
+                    + request.getEmail() + " is already in use");
         }
-        User user = new User();
+        User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setEmail(request.getEmail());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setShippingAddress(request.getShippingAddress());
         Role defaultRole = roleRepository.findByName(RoleName.ROLE_USER);
         user.setRoles(Set.of(defaultRole));
         User savedUser = userRepository.save(user);

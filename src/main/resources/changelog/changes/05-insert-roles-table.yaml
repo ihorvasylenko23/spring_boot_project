@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      author: root
+      author: IhorVasylenko
       id: insert-roles-table
       changes:
         - insert:

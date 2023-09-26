@@ -37,7 +37,7 @@ public class CategoryController {
         return categoryService.getByID(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN_ROLE')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create a new category", description = "Create a new category")
     @PostMapping
     public CategoryResponseDto createCategory(

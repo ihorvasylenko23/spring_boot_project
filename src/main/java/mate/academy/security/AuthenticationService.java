@@ -21,7 +21,10 @@ public class AuthenticationService {
                         requestDto.getPassword())
         );
         String token = jwtUtil.generateToken(authentication.getName());
-        return new UserLoginResponseDto(token);
+        UserLoginResponseDto responseDto = new UserLoginResponseDto();
+        responseDto.setToken(token);
+        return responseDto;
+
     }
 }
 
