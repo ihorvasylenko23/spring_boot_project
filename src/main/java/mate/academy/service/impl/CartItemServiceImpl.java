@@ -1,5 +1,6 @@
 package mate.academy.service.impl;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import mate.academy.dto.cart.item.CartItemDto;
@@ -18,6 +19,9 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public CartItemDto findById(Long id) {
         Optional<CartItem> optionalCartItem = cartItemRepository.findById(id);
-        return optionalCartItem.map(cartItemMapper::toDto).orElse(null);
+        return optionalCartItem.map(cartItemMapper::toDto)
+                .orElseThrow(() -> new NoSuchElementException(
+                        "CartItem with id " + id + " not found")
+        );
     }
 }

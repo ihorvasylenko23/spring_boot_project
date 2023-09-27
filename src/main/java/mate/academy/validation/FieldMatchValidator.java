@@ -2,30 +2,33 @@ package mate.academy.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.beans.BeanWrapperImpl;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
-    private String firstFieldName;
-    private String secondFieldName;
+
+    private String field;
+    private String fieldMatch;
 
     @Override
     public void initialize(FieldMatch constraintAnnotation) {
-        firstFieldName = constraintAnnotation.first();
-        secondFieldName = constraintAnnotation.second();
+        field = constraintAnnotation.first();
+        fieldMatch = constraintAnnotation.second();
     }
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        Object firstObj = FieldValueUtil.getFieldValue(value, firstFieldName);
-        Object secondObj = FieldValueUtil.getFieldValue(value, secondFieldName);
+        Object firstObj = getFieldValue(value, field);
+        Object secondObj = getFieldValue(value, fieldMatch);
 
-        if (firstObj == null && secondObj == null) {
-            return true;
+        if (firstObj == null || secondObj == null) {
+            return firstObj == secondObj;
         }
 
-        if (firstObj != null) {
-            return firstObj.equals(secondObj);
-        }
+        return firstObj.equals(secondObj);
+    }
 
-        return false;
+    private Object getFieldValue(Object object, String fieldName) {
+        BeanWrapperImpl wrapper = new BeanWrapperImpl(object);
+        return wrapper.getPropertyValue(fieldName);
     }
 }
