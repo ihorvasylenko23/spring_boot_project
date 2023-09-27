@@ -1,9 +1,9 @@
 package mate.academy.service.impl;
 
 import java.util.List;
-import mate.academy.dto.BookDto;
-import mate.academy.dto.BookSearchParametersDto;
 import mate.academy.dto.CreateBookRequestDto;
+import mate.academy.dto.book.BookDto;
+import mate.academy.dto.book.BookSearchParametersDto;
 import mate.academy.exception.EntityNotFoundException;
 import mate.academy.mapper.BookMapper;
 import mate.academy.model.Book;
@@ -30,7 +30,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
-        Book book = bookMapper.toModel(requestDto);
+        Book book = bookMapper.toEntity(requestDto);
         return bookMapper.toDto(bookRepository.save(book));
     }
 
