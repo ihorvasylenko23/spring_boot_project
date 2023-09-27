@@ -1,5 +1,6 @@
 package mate.academy.service.impl;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mate.academy.dto.book.BookDtoWithoutCategoryIds;
@@ -39,12 +40,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryResponseDto save(CreateCategoryRequestDto requestDto) {
         Category category = categoryMapper.toEntity(requestDto);
         return categoryMapper.toDto(categoryRepository.save(category));
     }
 
     @Override
+    @Transactional
     public CategoryResponseDto update(Long id, CreateCategoryRequestDto requestDto) {
         Category existingCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find category by id: " + id));
