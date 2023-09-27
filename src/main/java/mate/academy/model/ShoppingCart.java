@@ -3,7 +3,6 @@ package mate.academy.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,7 +34,7 @@ public class ShoppingCart {
     @ToString.Exclude
     private User user;
 
-    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
     @Fetch(FetchMode.JOIN)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

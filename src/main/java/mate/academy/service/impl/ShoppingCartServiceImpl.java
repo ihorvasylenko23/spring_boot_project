@@ -35,48 +35,54 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     public ShoppingCartDto addToCart(AddToCartRequestDto requestDto, Long userId) {
-        Long bookId = requestDto.getBookId();
-        int quantity = requestDto.getQuantity();
+        ShoppingCart cart = getOrCreateUserShoppingCart(userId);
+        Book book = getBookById(requestDto.getBookId());
 
-        ShoppingCart cart = shoppingCartRepository.findByUserId(userId)
-                .orElseGet(() -> {
-                    ShoppingCart newCart = new ShoppingCart();
-                    User user = userRepository.findById(userId)
-                            .orElseThrow(() ->
-                                    new EntityNotFoundException(
-                                            "User not found with id: " + userId));
-                    newCart.setUser(user);
-                    return shoppingCartRepository.save(newCart);
-                });
-
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Book not found with id: " + bookId));
-        CartItem existingCartItem = cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getBook().getId().equals(book.getId()))
-                .findFirst()
-                .orElse(null);
+        CartItem existingCartItem = findCartItemInCart(cart, book);
 
         if (existingCartItem != null) {
-            existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
+            existingCartItem.setQuantity(existingCartItem.getQuantity() + requestDto.getQuantity());
         } else {
-            CartItem newCartItem = new CartItem();
-            newCartItem.setShoppingCart(cart);
-            newCartItem.setBook(book);
-            newCartItem.setQuantity(quantity);
-            cart.getCartItems().add(newCartItem);
+            addNewCartItemToCart(cart, book, requestDto.getQuantity());
         }
-
-        saveCartAndItem(cart, existingCartItem);
-
         return shoppingCartMapper.toDto(cart);
     }
 
-    private void saveCartAndItem(ShoppingCart cart, CartItem existingCartItem) {
-        if (existingCartItem != null) {
-            cartItemRepository.save(existingCartItem);
-        }
-        shoppingCartRepository.save(cart);
+    private ShoppingCart getOrCreateUserShoppingCart(Long userId) {
+        return shoppingCartRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    User user = getUserById(userId);
+                    ShoppingCart newCart = new ShoppingCart();
+                    newCart.setUser(user);
+                    return shoppingCartRepository.save(newCart);
+                });
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("User not found with id: " + userId));
+    }
+
+    private Book getBookById(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Book not found with id: " + bookId));
+    }
+
+    private CartItem findCartItemInCart(ShoppingCart cart, Book book) {
+        return cart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getBook().getId().equals(book.getId()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void addNewCartItemToCart(ShoppingCart cart, Book book, int quantity) {
+        CartItem newCartItem = new CartItem();
+        newCartItem.setShoppingCart(cart);
+        newCartItem.setBook(book);
+        newCartItem.setQuantity(quantity);
+        cart.getCartItems().add(newCartItem);
     }
 
     @Override
