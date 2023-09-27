@@ -19,8 +19,9 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
 
         addSpecificationIfPresent(searchParameters.authors(), "author", spec);
         addSpecificationIfPresent(searchParameters.descriptions(), "description", spec);
-        addSpecificationIfPresent(searchParameters.isbns(), "isbn", spec);
-        addSpecificationIfPresent(searchParameters.prices(), "price", spec);
+        addSpecificationIfPresent(searchParameters.isbn(), "isbn", spec);
+        addPriceSpecificationIfPresent(searchParameters.minPrice(),
+                searchParameters.maxPrice(), spec);
         addSpecificationIfPresent(searchParameters.titles(), "title", spec);
 
         return spec;
@@ -33,6 +34,16 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
             spec = spec.and(bookSpecificationProviderManager
                     .getSpecificationProvider(providerName)
                     .getSpecification(values));
+        }
+    }
+
+    private void addPriceSpecificationIfPresent(Double minPrice,
+                                                Double maxPrice,
+                                                Specification<Book> spec) {
+        if (minPrice != null || maxPrice != null) {
+            spec = spec.and(bookSpecificationProviderManager
+                    .getSpecificationProvider("price")
+                    .getSpecification(minPrice, maxPrice));
         }
     }
 }
