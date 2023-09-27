@@ -18,6 +18,7 @@ import mate.academy.model.enums.Status;
 import mate.academy.repositiry.order.OrderRepository;
 import mate.academy.repositiry.shopping.cart.ShoppingCartRepository;
 import mate.academy.service.OrderService;
+import mate.academy.service.ShoppingCartService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,16 +27,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
+    private final ShoppingCartService shoppingCartService;
     private final ShoppingCartRepository shoppingCartRepository;
     private final OrderMapper orderMapper;
 
     @Override
     @Transactional
     public OrderResponseDto createOrder(User user, OrderCreateRequestDto requestDto) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Shopping cart not found for user: " + user.getId()));
-
+        ShoppingCart shoppingCart = shoppingCartService.getShoppingCartByUser(user);
         Order order = new Order();
         order.setUser(user);
         order.setShippingAddress(requestDto.getShippingAddress());
