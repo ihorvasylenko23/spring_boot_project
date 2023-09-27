@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-book-table
+      id: create-books-table
       author: root
       changes:
         - createTable:
@@ -48,4 +48,3 @@ databaseChangeLog:
                   defaultValueBoolean: false
                   constraints:
                     nullable: false
-
