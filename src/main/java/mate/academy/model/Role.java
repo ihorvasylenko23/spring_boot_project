@@ -11,6 +11,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.util.Set;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import mate.academy.model.enums.RoleName;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -27,6 +29,8 @@ public class Role implements GrantedAuthority {
     private RoleName name;
 
     @ManyToMany(mappedBy = "roles")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<User> users;
 
     @Override
