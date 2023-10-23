@@ -127,14 +127,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
 
-        return shoppingCartMapper.toDto(cartItem.getShoppingCart());
+        ShoppingCart reloadedCart = shoppingCartRepository
+                .findById(cartItem.getShoppingCart().getId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Cart not found for cart item: " + cartItemId));
+
+        return shoppingCartMapper.toDto(reloadedCart);
     }
 
     @Override
     public void deleteCartItem(Long userId, Long cartItemId) {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new NoSuchElementException(
-                        "Cart item not found with id: " + cartItemId));
+                .orElseThrow(()
+                        -> new NoSuchElementException(
+                                "Cart item not found with id: " + cartItemId));
 
         User userOfCartItem = cartItem.getShoppingCart().getUser();
 
@@ -144,5 +150,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
 
         cartItemRepository.deleteById(cartItemId);
+    }
+
+    @Override
+    public ShoppingCart getShoppingCartByUser(User user) {
+        return shoppingCartRepository.findByUserId(user.getId())
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Shopping cart not found for user: "
+                                        + user.getId()));
     }
 }
