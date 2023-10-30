@@ -1,6 +1,7 @@
 package mate.academy.repositiry.book;
 
-import mate.academy.dto.BookSearchParametersDto;
+import lombok.RequiredArgsConstructor;
+import mate.academy.dto.book.BookSearchParametersDto;
 import mate.academy.model.Book;
 import mate.academy.repositiry.SpecificationBuilder;
 import mate.academy.repositiry.SpecificationProviderManager;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
     @Autowired
@@ -19,7 +21,7 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
 
         addSpecificationIfPresent(searchParameters.authors(), "author", spec);
         addSpecificationIfPresent(searchParameters.descriptions(), "description", spec);
-        addSpecificationIfPresent(searchParameters.isbns(), "isbn", spec);
+        addSpecificationIfPresent(searchParameters.isbn(), "isbn", spec);
         addPriceSpecificationIfPresent(searchParameters.minPrice(),
                 searchParameters.maxPrice(), spec);
         addSpecificationIfPresent(searchParameters.titles(), "title", spec);
@@ -31,7 +33,7 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
                                            String providerName,
                                            Specification<Book> spec) {
         if (values != null && values.length > 0) {
-            spec = spec.and(bookSpecificationProviderManager
+            spec.and(bookSpecificationProviderManager
                     .getSpecificationProvider(providerName)
                     .getSpecification(values));
         }
