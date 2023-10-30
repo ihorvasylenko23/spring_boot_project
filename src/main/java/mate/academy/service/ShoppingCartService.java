@@ -7,13 +7,15 @@ import mate.academy.model.User;
 
 public interface ShoppingCartService {
 
+    void createCart(User user);
+
     ShoppingCartDto addToCart(AddToCartRequestDto requestDto, Long userId);
 
     ShoppingCartDto getCartByUserId(Long userId);
 
     ShoppingCartDto updateCartItem(Long userId, Long cartItemId, int quantity);
 
-    void deleteCartItem(Long userId, Long cartItemId);
+    void deleteCartItem(Long cartItemId, Long userId);
 
     ShoppingCart getShoppingCartByUser(User user);
 }

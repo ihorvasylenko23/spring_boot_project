@@ -4,10 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import mate.academy.dto.order.OrderCreateRequestDto;
+import mate.academy.dto.order.CreateOrderRequestDto;
 import mate.academy.dto.order.OrderItemResponseDto;
 import mate.academy.dto.order.OrderResponseDto;
-import mate.academy.dto.order.OrderStatusDto;
+import mate.academy.dto.order.UpdateStatusRequestDto;
 import mate.academy.model.User;
 import mate.academy.service.OrderItemService;
 import mate.academy.service.OrderService;
@@ -32,24 +32,25 @@ public class OrderController {
 
     @PostMapping
     @Operation(summary = "Create a new order", description = "Create a new order for a user")
-    public OrderResponseDto createOrder(@RequestBody OrderCreateRequestDto requestDto,
+    public OrderResponseDto createOrder(@RequestBody CreateOrderRequestDto requestDto,
                                         Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return orderService.createOrder(user, requestDto);
+        return orderService.save(requestDto, user);
     }
 
     @GetMapping
     @Operation(summary = "Get all orders", description = "Get list of all orders for a user")
     public List<OrderResponseDto> getAll(Authentication authentication, Pageable pageable) {
         User user = (User) authentication.getPrincipal();
-        return orderService.getOrdersByUser(user, pageable);
+        return orderService.getAll(pageable, user.getId());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     @Operation(summary = "Update order status", description = "Update status of an order by id")
-    public void updateOrderStatus(@PathVariable Long id, @RequestBody OrderStatusDto statusDto) {
-        orderService.updateOrderStatus(id, statusDto.getStatus());
+    public void updateOrderStatus(@PathVariable Long id,
+                                  @RequestBody UpdateStatusRequestDto statusDto) {
+        orderService.updateOrderStatus(id, statusDto);
     }
 
     @GetMapping("/{orderId}/items")

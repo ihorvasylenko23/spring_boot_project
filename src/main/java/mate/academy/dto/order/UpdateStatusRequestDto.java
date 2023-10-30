@@ -4,6 +4,6 @@ import lombok.Data;
 import mate.academy.model.enums.Status;
 
 @Data
-public class OrderStatusDto {
+public class UpdateStatusRequestDto {
     private Status status;
 }

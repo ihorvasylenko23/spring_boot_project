@@ -34,6 +34,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemMapper cartItemMapper;
 
     @Override
+    public void createCart(User user) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setId(user.getId());
+        shoppingCart.setUser(user);
+        shoppingCartRepository.save(shoppingCart);
+    }
+
+    @Override
     @Transactional
     public ShoppingCartDto addToCart(AddToCartRequestDto requestDto, Long userId) {
         ShoppingCart cart = getOrCreateUserShoppingCart(userId);
@@ -137,7 +145,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public void deleteCartItem(Long userId, Long cartItemId) {
+    public void deleteCartItem(Long cartItemId, Long userId) {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(()
                         -> new NoSuchElementException(

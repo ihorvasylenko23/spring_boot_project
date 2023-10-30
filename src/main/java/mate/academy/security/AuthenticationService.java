@@ -24,7 +24,6 @@ public class AuthenticationService {
         UserLoginResponseDto responseDto = new UserLoginResponseDto();
         responseDto.setToken(token);
         return responseDto;
-
     }
 }
 

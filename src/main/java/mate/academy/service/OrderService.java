@@ -1,16 +1,21 @@
 package mate.academy.service;
 
 import java.util.List;
-import mate.academy.dto.order.OrderCreateRequestDto;
+import mate.academy.dto.order.CreateOrderRequestDto;
+import mate.academy.dto.order.OrderItemResponseDto;
 import mate.academy.dto.order.OrderResponseDto;
+import mate.academy.dto.order.UpdateStatusRequestDto;
 import mate.academy.model.User;
-import mate.academy.model.enums.Status;
 import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
-    OrderResponseDto createOrder(User user, OrderCreateRequestDto requestDto);
+    List<OrderResponseDto> getAll(Pageable pageable, Long userId);
 
-    List<OrderResponseDto> getOrdersByUser(User user, Pageable pageable);
+    OrderResponseDto save(CreateOrderRequestDto requestDto, User user);
 
-    void updateOrderStatus(Long id, Status status);
+    OrderResponseDto updateOrderStatus(Long id, UpdateStatusRequestDto requestDto);
+
+    List<OrderItemResponseDto> getAllByOrderId(Long orderId, Pageable pageable, Long userId);
+
+    OrderItemResponseDto getOrderItemById(Long orderId, Long itemId);
 }
